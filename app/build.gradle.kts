@@ -33,6 +33,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    //Cada vez que cree un layout android nos crea una clase con el nombre de esa
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
