@@ -2,7 +2,9 @@ package com.javier.freegames.data
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface GameService {
@@ -26,3 +28,13 @@ interface GameService {
     }
 }
 
+// Conexion a API para traducir texto de freetogame
+
+interface TranslateService {
+
+    @GET("get")
+    suspend fun translate(
+        @Query("q") text: String,
+        @Query("langpair") langpair: String = "en|es"
+    ): TranslateResponse
+}
