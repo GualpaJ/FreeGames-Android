@@ -52,7 +52,9 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.title = game.title
 
         binding.titleTextView.text = game.title
-        Picasso.get().load(game.image).into(binding.thumbnailImageView)
+        Picasso.get()
+            .load(game.screenshots?.firstOrNull()?.image)
+            .into(binding.thumbnailImageView)
         binding.gameUrlButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setData(game.gameURL.toUri())

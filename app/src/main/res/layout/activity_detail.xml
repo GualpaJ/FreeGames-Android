@@ -6,21 +6,37 @@
     tools:context=".activities.DetailActivity"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#131314">
 
+    <!-- HEADER IMAGE CON DEGRADADO -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="240dp">
+        android:layout_height="320dp">
 
-        <ImageView
-            android:id="@+id/thumbnailImageView"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:src="@drawable/ic_launcher_background"
-            android:scaleType="centerCrop"/>
+            android:layout_height="match_parent">
+
+            <!-- Imagen -->
+            <ImageView
+                android:id="@+id/thumbnailImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_launcher_background" />
+
+            <!-- Degradado hacia el fondo -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/fade_to_bg" />
+
+        </FrameLayout>
 
     </androidx.cardview.widget.CardView>
 
+    <!-- TÍTULO -->
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
@@ -30,9 +46,9 @@
         android:textSize="24sp"
         android:textColor="#FFFFFF"
         android:gravity="center"
-        android:layout_gravity="bottom"
-        android:background="#9A858585"
         android:layout_marginTop="20dp"/>
+
+    <!-- CONTENIDO -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -48,27 +64,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
+                android:textColor="#FFFFFF"
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                tools:text="Description"
-                android:layout_marginBottom="8dp"/>
-
-            <TextView
-                android:id="@+id/translateTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Powered by Google Translate"
-                android:textSize="12sp"
-                android:textColor="@android:color/darker_gray"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:visibility="gone"
-                android:layout_gravity="center_horizontal" />
+                tools:text="Description" />
 
         </LinearLayout>
     </ScrollView>
 
+    <!-- BOTÓN -->
     <Button
         android:id="@+id/gameUrlButton"
         android:layout_width="wrap_content"
@@ -77,6 +82,5 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"/>
-
 
 </LinearLayout>
