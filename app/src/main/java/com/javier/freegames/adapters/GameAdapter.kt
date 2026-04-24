@@ -38,8 +38,10 @@ class GameAdapter(var items: List<Game>, val onClick:(Int)-> Unit) : RecyclerVie
 class GameViewHolder(val binding: ItemGameBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun render(game: Game) {
-        binding.titleTextView.text = game.title
+        binding.titleTextView.text = game.title.uppercase()
         Picasso.get().load(game.image).into(binding.thumbnailImageView)
+        binding.genreTextView.text = game.genre
+        binding.platformTextView.text= game.platform
     }
 
 }

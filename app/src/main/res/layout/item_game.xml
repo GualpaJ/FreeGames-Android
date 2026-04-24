@@ -4,38 +4,120 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="240dp">
+    android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:cardCornerRadius="32dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        android:padding="4dp"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?attr/selectableItemBackground">
+        android:foreground="?attr/selectableItemBackground"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="#1F1F20"
+        app:strokeColor="#6A6A6E"
+        app:strokeWidth="2dp">
 
-        <ImageView
-            android:id="@+id/thumbnailImageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:src="@drawable/ic_launcher_background"
-            android:scaleType="centerCrop"/>
-
-        <TextView
-            android:id="@+id/titleTextView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Game name"
-            android:textStyle="bold"
-            android:textSize="24sp"
-            android:textColor="#FFFFFF"
-            android:gravity="center"
-            android:layout_gravity="bottom"
-            android:background="#9A858585"/>
+            android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/thumbnailImageView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_launcher_background" />
 
-    </androidx.cardview.widget.CardView>
+            <!-- Contenedor principal: 60dp TOTAL -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#1F1F20">
+
+                <TextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingTop="16dp"
+                    tools:text="Game name" />
+
+                <!-- Contenedor horizontal para género y plataforma -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center_vertical">
+
+                    <!-- CHIP: Genre -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/genreTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="Genre"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:textColor="#BB86FC"
+
+                        android:padding="0dp"
+                        android:insetLeft="0dp"
+                        android:insetRight="0dp"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="10sp"
+                        android:paddingEnd="10sp"
+
+                        app:cornerRadius="8dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="#BB86FC"
+                        app:backgroundTint="#2C2535"/>
+
+                    <!-- Espacio entre chips -->
+                    <Space
+                        android:layout_width="8dp"
+                        android:layout_height="0dp"/>
+
+                    <!-- CHIP: Platform -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/platformTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:text="Platform"
+                        android:textAllCaps="false"
+                        android:textSize="12sp"
+                        android:textColor="#AAAAAA"
+
+                        android:padding="0dp"
+                        android:insetLeft="0dp"
+                        android:insetRight="0dp"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingStart="10sp"
+                        android:paddingEnd="10sp"
+
+                        app:cornerRadius="8dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="#555555"
+                        app:backgroundTint="@android:color/transparent"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>
