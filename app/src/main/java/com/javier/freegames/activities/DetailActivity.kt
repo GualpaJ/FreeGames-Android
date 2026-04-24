@@ -8,7 +8,6 @@ import com.javier.freegames.databinding.ActivityDetailBinding
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import android.util.Log.e
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.javier.freegames.R
@@ -18,18 +17,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
-import androidx.lifecycle.lifecycleScope
-import com.javier.freegames.data.TranslateApi
-import com.javier.freegames.data.TranslateRequest
-import kotlinx.coroutines.delay
+import com.google.mlkit.nl.translate.TranslateLanguage
+import com.google.mlkit.nl.translate.Translation
+import com.google.mlkit.nl.translate.TranslatorOptions
 import kotlinx.coroutines.withContext
-
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class DetailActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityDetailBinding
-
     lateinit var game: Game
+    private var translator: com.google.mlkit.nl.translate.Translator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +49,52 @@ class DetailActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             game = GameService.getInstance().getGameById(id)
 
+            // Inicializar el traductor offline
+            inicializarTraductor()
+
             CoroutineScope(Dispatchers.Main).launch {
                 loadData()
             }
         }
     }
 
-    fun loadData() {
-        // Log.i("TRANSLATE_DEBUG", "ENTRO EN loadData()") esto era para debug de la api
-        supportActionBar?.title = game.title
+    private suspend fun inicializarTraductor() {
+        return suspendCancellableCoroutine { continuation ->
+            val options = TranslatorOptions.Builder()
+                .setSourceLanguage(TranslateLanguage.ENGLISH)
+                .setTargetLanguage(TranslateLanguage.SPANISH)
+                .build()
 
+            translator = Translation.getClient(options)
+
+            translator?.downloadModelIfNeeded()
+                ?.addOnSuccessListener {
+                    Log.i("MLKIT", "✅ Modelo de traducción listo")
+                    continuation.resume(Unit)
+                }
+                ?.addOnFailureListener { e ->
+                    Log.e("MLKIT", "❌ Error descargando modelo: ${e.message}")
+                    continuation.resume(Unit) // Continuamos aunque falle
+                }
+        }
+    }
+
+    private suspend fun traducirChunk(texto: String): String {
+        return suspendCancellableCoroutine { continuation ->
+            translator?.translate(texto)
+                ?.addOnSuccessListener { traducido ->
+                    continuation.resume(traducido)
+                }
+                ?.addOnFailureListener { e ->
+                    Log.e("MLKIT", "❌ Error traduciendo chunk: ${e.message}")
+                    continuation.resume(texto) // Fallback: devolvemos el original
+                }
+                ?: continuation.resume(texto) // Si translator es null, devolvemos original
+        }
+    }
+
+    fun loadData() {
+        supportActionBar?.title = game.title
         binding.titleTextView.text = game.title
         Picasso.get().load(game.image).into(binding.thumbnailImageView)
         binding.gameUrlButton.setOnClickListener {
@@ -67,35 +103,31 @@ class DetailActivity : AppCompatActivity() {
             startActivity(intent)
         }
         Log.i("GAME_DEBUG", "ID del juego: ${game.id}")
-        //binding.descriptionTextView.text = game.description -- Descripcion nativa de la API
-        // Traducimos el texto mediante la API de mymemory.translated.
-        // Link de la documentacion : https://mymemory.translated.net/doc/spec.php
+
+        // Mostrar texto original inmediatamente (por si la traducción tarda)
+        binding.descriptionTextView.text = game.description ?: "Sin descripción disponible"
+
+        // Traducción con ML Kit - SIN CHUNKS
         CoroutineScope(Dispatchers.IO).launch {
             val fullText = game.description ?: ""
 
+            if (fullText.isEmpty()) return@launch
+
             try {
-                // 1. Dividimos por párrafos (saltos de línea)
-                val paragraphs = fullText.split("\n\n", "\n") // Separa por doble o simple salto de línea
+                // Dividimos por párrafos (saltos de línea)
+                val paragraphs = fullText.split("\n\n", "\n")
                 val translatedParts = mutableListOf<String>()
 
                 Log.i("TRANSLATE_DEBUG", "Párrafos encontrados: ${paragraphs.size}")
 
-                // 2. Traducimos cada párrafo
+                // Traducimos cada párrafo COMPLETO (sin chunks)
                 for ((index, paragraph) in paragraphs.withIndex()) {
                     if (paragraph.isBlank()) continue
 
-                    // Si un párrafo es muy largo (>400 chars), lo dividimos
-                    val chunks = if (paragraph.length > 400) {
-                        paragraph.chunked(400)
-                    } else {
-                        listOf(paragraph)
-                    }
-
-                    for (chunk in chunks) {
-                        val response = TranslateApi.service.translate(chunk, "en|es")
-                        val translated = response.responseData.translatedText
-                        translatedParts.add(translated)
-                    }
+                    // Traducir el párrafo entero de una vez
+                    val translated = traducirChunk(paragraph)  // El nombre "traducirChunk" queda raro pero funciona
+                    translatedParts.add(translated)
+                    Log.i("TRANSLATE_DEBUG", "Párrafo ${index + 1} traducido: ${translated.take(100)}...")
 
                     // Añadir salto de línea entre párrafos traducidos
                     if (index < paragraphs.size - 1) {
@@ -103,20 +135,29 @@ class DetailActivity : AppCompatActivity() {
                     }
                 }
 
-                // 3. Unimos todo
+                // Unimos todo
                 val finalText = translatedParts.joinToString(" ")
 
-                // 4. Actualizamos UI
+                // Actualizamos UI
                 withContext(Dispatchers.Main) {
-                    binding.descriptionTextView.text = finalText
+                    // Limpiar saltos de línea excesivos para evitar espacios extra
+                    val cleanedText = finalText
+                        .replace(Regex("\\n\\s*\\n"), "\n\n")  // Saltos dobles normales
+                        .replace(Regex("\\n"), " ")            // Saltos simples por espacios
+                        .trim()
+
+                    binding.descriptionTextView.text = cleanedText
+                    binding.translateTextView.visibility = android.view.View.VISIBLE
                 }
             } catch (e: Exception) {
                 Log.e("TRANSLATE_DEBUG", "Error: ${e.message}")
-                withContext(Dispatchers.Main) {
-                    binding.descriptionTextView.text = fullText
-                }
+                // No hacemos nada porque el texto original ya está visible
             }
         }
+    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        translator?.close()
     }
 }
