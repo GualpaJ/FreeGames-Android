@@ -16,6 +16,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.core.net.toUri
+import androidx.recyclerview.widget.GridLayoutManager
+import com.javier.freegames.adapters.GalleryAdapter
 
 
 class DetailActivity : AppCompatActivity() {
@@ -51,7 +53,7 @@ class DetailActivity : AppCompatActivity() {
     fun loadData() {
         supportActionBar?.title = game.title
 
-        binding.titleTextView.text = game.title
+        binding.titleTextView.text = game.title.uppercase()
         Picasso.get()
             .load(game.screenshots?.firstOrNull()?.image)
             .into(binding.thumbnailImageView)
@@ -60,6 +62,30 @@ class DetailActivity : AppCompatActivity() {
             intent.setData(game.gameURL.toUri())
             startActivity(intent)
         }
-        binding.descriptionTextView.text = game.description
+        binding.descriptionTextView.text = game.shortDescription
+
+        setupGallery()
+    }
+
+    private fun setupGallery() {
+        val screenshots = game.screenshots ?: emptyList()
+
+        if (screenshots.isNotEmpty()) {
+            val layoutManager = GridLayoutManager(this, 2)
+
+            layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    val totalItems = screenshots.size
+                    // Si es la última posición Y el total es impar -> ocupa 2 columnas
+                    return if (position == totalItems - 1 && totalItems % 2 != 0) 2 else 1
+                }
+            }
+
+            binding.galleryRecyclerView.layoutManager = layoutManager
+            binding.galleryRecyclerView.adapter = GalleryAdapter(screenshots)
+        } else {
+            binding.galleryTextView.visibility = android.view.View.GONE
+            binding.galleryRecyclerView.visibility = android.view.View.GONE
+        }
     }
 }

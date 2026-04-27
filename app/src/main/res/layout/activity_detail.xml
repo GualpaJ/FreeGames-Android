@@ -1,86 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    tools:context=".activities.DetailActivity"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:background="#131314">
 
-    <!-- HEADER IMAGE CON DEGRADADO -->
-    <androidx.cardview.widget.CardView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="320dp">
+        android:layout_height="wrap_content">
 
-        <FrameLayout
+        <!-- IMAGEN FONDO-->
+        <ImageView
+            android:id="@+id/thumbnailImageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="400dp"
+            android:scaleType="centerCrop"
+            tools:src="@drawable/ic_launcher_background" />
 
-            <!-- Imagen -->
-            <ImageView
-                android:id="@+id/thumbnailImageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/ic_launcher_background" />
+        <!-- DEGRADADO -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:background="@drawable/fade_to_bg" />
 
-            <!-- Degradado hacia el fondo -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/fade_to_bg" />
-
-        </FrameLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <!-- TÍTULO -->
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="Game name"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:layout_marginTop="20dp"/>
-
-    <!-- CONTENIDO -->
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
+        <!-- CONTENIDO -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="300dp"
+            android:paddingBottom="20dp">
 
-            <TextView
-                android:id="@+id/descriptionTextView"
+            <!-- CARD GLASS -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:textColor="#FFFFFF"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                tools:text="Description" />
+                android:layout_margin="20dp"
+                android:background="@drawable/bg_blur_card"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- TÍTULO -->
+                <TextView
+                    android:id="@+id/titleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/space_grotesk"
+                    android:textColor="#D7B8FA"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    tools:text="Game name" />
+
+                <!-- DESCRIPCIÓN -->
+                <TextView
+                    android:id="@+id/descriptionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    tools:text="Description" />
+
+            </LinearLayout>
+
+            <!-- GALERÍA -->
+            <TextView
+                android:id="@+id/galleryTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:fontFamily="@font/space_grotesk"
+                android:text="Gallery"
+                android:textAllCaps="true"
+                android:textColor="#D7B8FA"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <!-- RECYCLERVIEW -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/galleryRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:nestedScrollingEnabled="false" />
+
+            <!-- ESPECIFICACIONES TECNICAS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/bg_blur_card"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- TÍTULO -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/space_grotesk"
+                    android:text="System Requirements"
+                    android:textAllCaps="true"
+                    android:textColor="#D7B8FA"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <!-- OS -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="OS"
+                    android:textColor="#519159"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/osTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    tools:text="64-bit Windows 7, Windows 8.1, Windows 10" />
+
+                <!-- PROCESSOR -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Processor"
+                    android:textColor="#519159"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/processorTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    tools:text="Intel Core i5-4430 / AMD FX-6300" />
+
+                <!-- MEMORY -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Memory"
+                    android:textColor="#519159"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/memoryTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    tools:text="8 GB RAM" />
+
+                <!-- GRAPHICS -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Graphics"
+                    android:textColor="#519159"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/graphicsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    tools:text="NVIDIA GeForce GTX 960 2GB / AMD Radeon R7 370 2GB" />
+
+                <!-- STORAGE -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Storage"
+                    android:textColor="#519159"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/storageTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    tools:text="40 GB available space" />
+
+            </LinearLayout>
+
+            <!-- BOTÓN -->
+            <Button
+                android:id="@+id/gameUrlButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:text="Download"
+                android:textAllCaps="true"
+                android:textStyle="bold" />
 
         </LinearLayout>
-    </ScrollView>
 
-    <!-- BOTÓN -->
-    <Button
-        android:id="@+id/gameUrlButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Jugar"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"/>
+    </FrameLayout>
 
-</LinearLayout>
+</ScrollView>
