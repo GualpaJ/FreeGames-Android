@@ -106,4 +106,4 @@ El proyecto ha evolucionado hasta una versión estable (v2.0), incorporando mejo
 1. Clona el repositorio:
 
 ```bash
-git clone https://github.com/tuusuario/freegames_app.git
+git clone https://github.com/GualpaJ/FreeGames-Android.git
