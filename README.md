@@ -79,4 +79,4 @@ En esta **versión 1.0**, la app introduce navegación entre pantallas, consumo 
 ## 🚀 Cómo ejecutar el proyecto
 
 ```bash
-git clone https://github.com/tuusuario/freegames_app.git
+git clone https://github.com/GualpaJ/FreeGames-Android.git
