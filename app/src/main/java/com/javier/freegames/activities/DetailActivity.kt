@@ -7,6 +7,7 @@ import com.javier.freegames.data.Game
 import com.javier.freegames.databinding.ActivityDetailBinding
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.javier.freegames.R
@@ -40,6 +41,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         val id = intent.getIntExtra("GAME_ID", -1)
+        Log.d("DETAIL_DEBUG", "GAME ID: $id")
 
         CoroutineScope(Dispatchers.IO).launch {
             game = GameService.getInstance().getGameById(id)
@@ -54,15 +56,25 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.title = game.title
 
         binding.titleTextView.text = game.title.uppercase()
+
         Picasso.get()
             .load(game.screenshots?.firstOrNull()?.image)
             .into(binding.thumbnailImageView)
+
         binding.gameUrlButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setData(game.gameURL.toUri())
             startActivity(intent)
         }
+
         binding.descriptionTextView.text = game.shortDescription
+
+        // SYSTEM REQUIREMENTS
+        binding.osTextView.text = game.systemRequirements?.os ?: "Not available"
+        binding.processorTextView.text = game.systemRequirements?.processor ?: "Not available"
+        binding.memoryTextView.text = game.systemRequirements?.memory ?: "Not available"
+        binding.graphicsTextView.text = game.systemRequirements?.graphics ?: "Not available"
+        binding.storageTextView.text = game.systemRequirements?.storage ?: "Not available"
 
         setupGallery()
     }
